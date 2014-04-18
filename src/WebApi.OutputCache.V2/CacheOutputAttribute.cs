@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -19,7 +20,7 @@ namespace WebApi.OutputCache.V2
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class CacheOutputAttribute : FilterAttribute, IActionFilter
     {
-        protected static MediaTypeHeaderValue DefaultMediaType = new MediaTypeHeaderValue("application/json; charset=utf-8");
+        protected MediaTypeHeaderValue DefaultMediaType = MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
         public bool AnonymousOnly { get; set; }
         public bool MustRevalidate { get; set; }
         public bool ExcludeQueryStringFromCacheKey { get; set; }
@@ -129,7 +130,8 @@ namespace WebApi.OutputCache.V2
             actionContext.Response = actionContext.Request.CreateResponse();
             actionContext.Response.Content = new ByteArrayContent(val);
 
-            actionContext.Response.Content.Headers.ContentType = new MediaTypeHeaderValue(contenttype);
+            var mediatypeHeaderValue = new MediaTypeHeaderValue(contenttype) { CharSet = "utf-8" };
+            actionContext.Response.Content.Headers.ContentType = mediatypeHeaderValue;
             var responseEtag = _webApiCache.Get(cachekey + Constants.EtagKey) as string;
             if (responseEtag != null) SetEtag(actionContext.Response,  responseEtag);
 

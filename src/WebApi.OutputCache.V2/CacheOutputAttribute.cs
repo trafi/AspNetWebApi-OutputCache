@@ -19,7 +19,7 @@ namespace WebApi.OutputCache.V2
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class CacheOutputAttribute : FilterAttribute, IActionFilter
     {
-        protected static MediaTypeHeaderValue DefaultMediaType = new MediaTypeHeaderValue("application/json");
+        protected static MediaTypeHeaderValue DefaultMediaType = new MediaTypeHeaderValue("application/json; charset=utf-8");
         public bool AnonymousOnly { get; set; }
         public bool MustRevalidate { get; set; }
         public bool ExcludeQueryStringFromCacheKey { get; set; }

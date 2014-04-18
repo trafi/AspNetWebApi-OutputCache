@@ -28,9 +28,9 @@ namespace WebApi.OutputCache.V2
         public int ClientTimeSpan { get; set; }
         public bool NoCache { get; set; }
         public Type CacheKeyGenerator { get; set; }
-        
+
         private MediaTypeHeaderValue _responseMediaType;
-        
+
         // cache repository
         private IApiOutputCache _webApiCache;
 
@@ -57,7 +57,7 @@ namespace WebApi.OutputCache.V2
 
         protected void ResetCacheTimeQuery()
         {
-            CacheTimeQuery = new ShortTime( ServerTimeSpan, ClientTimeSpan );
+            CacheTimeQuery = new ShortTime(ServerTimeSpan, ClientTimeSpan);
         }
 
         protected virtual MediaTypeHeaderValue GetExpectedMediaType(HttpConfiguration config, HttpActionContext actionContext)
@@ -111,7 +111,7 @@ namespace WebApi.OutputCache.V2
                 var etag = _webApiCache.Get(cachekey + Constants.EtagKey) as string;
                 if (etag != null)
                 {
-                    if (actionContext.Request.Headers.IfNoneMatch.Any(x => x.Tag ==  etag))
+                    if (actionContext.Request.Headers.IfNoneMatch.Any(x => x.Tag == etag))
                     {
                         var time = CacheTimeQuery.Execute(DateTime.Now);
                         var quickResponse = actionContext.Request.CreateResponse(HttpStatusCode.NotModified);
@@ -133,7 +133,7 @@ namespace WebApi.OutputCache.V2
             var mediatypeHeaderValue = new MediaTypeHeaderValue(contenttype) { CharSet = "utf-8" };
             actionContext.Response.Content.Headers.ContentType = mediatypeHeaderValue;
             var responseEtag = _webApiCache.Get(cachekey + Constants.EtagKey) as string;
-            if (responseEtag != null) SetEtag(actionContext.Response,  responseEtag);
+            if (responseEtag != null) SetEtag(actionContext.Response, responseEtag);
 
             var cacheTime = CacheTimeQuery.Execute(DateTime.Now);
             ApplyCacheHeaders(actionContext.Response, cacheTime);
@@ -184,10 +184,10 @@ namespace WebApi.OutputCache.V2
             if (cacheTime.ClientTimeSpan > TimeSpan.Zero || MustRevalidate)
             {
                 var cachecontrol = new CacheControlHeaderValue
-                                       {
-                                           MaxAge = cacheTime.ClientTimeSpan,
-                                           MustRevalidate = MustRevalidate
-                                       };
+                {
+                    MaxAge = cacheTime.ClientTimeSpan,
+                    MustRevalidate = MustRevalidate
+                };
 
                 response.Headers.CacheControl = cachecontrol;
             }
@@ -269,4 +269,4 @@ namespace WebApi.OutputCache.V2
         }
 
     }
-} 
+}

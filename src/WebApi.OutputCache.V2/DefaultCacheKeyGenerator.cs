@@ -44,7 +44,7 @@ namespace WebApi.OutputCache.V2
 
             if (parameters == "-") parameters = string.Empty;
 
-            var cachekey = string.Format("{0}{1}:{2}", key, parameters, mediaType.MediaType);
+            var cachekey = string.Format("{0}{1}:{2}:{3}", key, parameters, mediaType.MediaType, context.Request.Headers.AcceptLanguage);
             return cachekey;
         }
 
